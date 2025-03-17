@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import br.edu.fatec.com.calcularimc.ResultadoActivity
+import br.edu.fatecpg.com.calcularimc.ResultadoActivity
+import br.edu.fatecpg.com.calcularimc.dao.ImcDao
+import br.edu.fatecpg.com.calcularimc.model.Imc
 import br.edu.fatecpg.com.calcularimc.R
 
 class MainActivity : AppCompatActivity() {
@@ -23,10 +25,12 @@ class MainActivity : AppCompatActivity() {
             val altura = editTextAltura.text.toString().toFloatOrNull()
 
             if (peso != null && altura != null && altura > 0) {
-                val imc = peso / (altura * altura)
+                val imcValue = peso / (altura * altura)
+
+                val imc = Imc(peso.toDouble(), altura.toDouble(), imcValue.toDouble())
+                ImcDao.definirImc(imc)
 
                 val intent = Intent(this, ResultadoActivity::class.java)
-                intent.putExtra("IMC_RESULTADO", imc)
                 startActivity(intent)
             } else {
                 editTextPeso.error = "Insira um peso válido"

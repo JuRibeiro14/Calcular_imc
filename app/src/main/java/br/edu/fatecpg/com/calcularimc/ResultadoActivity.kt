@@ -1,9 +1,10 @@
-package br.edu.fatec.com.calcularimc
+package br.edu.fatecpg.com.calcularimc
 
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import br.edu.fatecpg.com.calcularimc.dao.ImcDao
 import br.edu.fatecpg.com.calcularimc.R
 
 class ResultadoActivity : AppCompatActivity() {
@@ -16,16 +17,18 @@ class ResultadoActivity : AppCompatActivity() {
         val textViewClassificacao: TextView = findViewById(R.id.txt_classificacao)
         val buttonVoltar: Button = findViewById(R.id.btn_voltar)
 
-        val imc = intent.getFloatExtra("IMC_RESULTADO", 0.0f)
-        textViewResultado.text = "Seu IMC é: %.2f".format(imc)
-        textViewClassificacao.text = classificarIMC(imc)
+        // Recupera o IMC do ImcDao
+        val imc = ImcDao.retornarImc()
+
+        textViewResultado.text = "Seu IMC é: %.2f".format(imc.calcImc)
+        textViewClassificacao.text = classificarIMC(imc.calcImc)
 
         buttonVoltar.setOnClickListener {
             finish()
         }
     }
 
-    private fun classificarIMC(imc: Float): String {
+    private fun classificarIMC(imc: Double): String {
         return when {
             imc < 18.5 -> "Abaixo do peso"
             imc in 18.5..24.9 -> "Peso ideal"
